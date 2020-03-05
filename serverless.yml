@@ -1,0 +1,30 @@
+service: prisma2-issues
+
+provider:
+  name: aws
+  endpointType: REGIONAL
+  region: eu-west-1
+  runtime: nodejs12.x
+  timeout: 30
+  memorySize: 1536
+  tracing:
+    apiGateway: true
+    lambda: true
+
+functions:
+  graphql:
+    handler: src/index.server
+    environment:
+      NPM_CONFIG_PRODUCTION: false
+      NODE_ENV: dev
+      PRISMA_POSTGRES_URL: ${PRISMA_POSTGRES_URL}
+    events:
+      - http:
+          path: /
+          method: post
+          cors: true
+      - http:
+          path: /
+          method: get
+          cors: true
+    timeout: 30

@@ -1,0 +1,34 @@
+generator photon {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-1.0.x"]
+}
+
+datasource db {
+  url      = env("PRISMA_POSTGRES_URL")
+  provider = "postgres"
+}
+
+model Post {
+  author      User       
+  content     String?    
+  createdAt   DateTime   @default(now())
+  id          String     @id @default(cuid())
+  published   Boolean    @default(true)
+  title       String     
+  updatedAt   DateTime   @updatedAt
+}
+
+model User {
+  createdAt   DateTime   @default(now())
+  email       String     @unique
+  id          String     @id @default(cuid())
+  name        String?    
+  posts       Post[]     
+  role        Role       
+  updatedAt   DateTime   @updatedAt
+}
+
+enum Role {
+  ADMIN
+  AUTHOR
+}
